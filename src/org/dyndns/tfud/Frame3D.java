@@ -6,7 +6,7 @@ import java.awt.event.*;
 /**
  * Sample application using Frame.
  *
- * @@author
+ * @@author Brian
  * @@version 1.00 04/05/12
  */
 public class Frame3D extends Frame {
@@ -36,6 +36,13 @@ public class Frame3D extends Frame {
 
     }
 
+    /**
+     * 
+     * @param anglez1
+     * @param anglex1
+     * @param angley1
+     * @throws HeadlessException 
+     */
     private void init(double anglez1, double anglex1, double angley1) throws HeadlessException {
         this.anglez = anglez1;
         this.anglex = anglex1;
@@ -76,6 +83,10 @@ public class Frame3D extends Frame {
         System.exit(0);
     }
 
+    /**
+     * 
+     * @param g 
+     */
     @Override
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
@@ -173,11 +184,17 @@ public class Frame3D extends Frame {
 
     }
 
+    /**
+     * 
+     */
     public void render() {
 
         DoWork();
     }
 
+    /**
+     * 
+     */
     private void DoWork() {
         repaint();
         try {
