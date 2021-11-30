@@ -1,3 +1,5 @@
+package org.dyndns.tfud;
+
 public class Point {
 	public int x,y;
 	

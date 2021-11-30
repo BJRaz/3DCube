@@ -1,3 +1,6 @@
+package org.dyndns.tfud;
+
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -10,66 +13,66 @@ import java.awt.event.*;
 public class Test3DFrame extends Frame {
     
     
-    private int i = 60;
-    private int x[] = {i, i, i, i, -i, -i, -i, -i};
-    private int y[] = {i, i, -i, -i, i, i, -i, -i};
-    private int z[] = {-i, i, -i, i, -i, i, -i, i};
+    private final int i = 60;
+    private final int x[] = {i, i, i, i, -i, -i, -i, -i};
+    private final int y[] = {i, i, -i, -i, i, i, -i, -i};
+    private final int z[] = {-i, i, -i, i, -i, i, -i, i};
     
-    private double scale = 1.0;
     
     /**
      * The constructor.
      */  
      private double anglez, anglex, angley;
      
-     private static int speed = 50;
+    private static final double SCALE = 1;
+     private static final int SPEED = 131;
      
      public Test3DFrame(double anglex, double angley, double anglez) {
+        
            
-        this.anglez = anglez; 
-        this.anglex = anglex;  
-        this.angley = angley;
-                 
+        init(anglez, anglex, angley); 
+        
+       	
+    }
+
+    private void init(double anglez1, double anglex1, double angley1) throws HeadlessException {
+        this.anglez = anglez1;
+        this.anglex = anglex1;
+        this.angley = angley1;
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu();
         MenuItem menuFileExit = new MenuItem();
-        
         menuFile.setLabel("File");
         menuFileExit.setLabel("Exit");
-        
         // Add action listener.for the menu button
         menuFileExit.addActionListener
-        (
-            new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    Test3DFrame.this.windowClosed();
-                }
-            }
-        ); 
+                (
+                        new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                Test3DFrame.this.windowClosed();
+                            }
+                        }
+                ); 
         menuFile.add(menuFileExit);
         menuBar.add(menuFile);
-        
         setTitle("3D");
-       // setMenuBar(menuBar);
+        // setMenuBar(menuBar);
         setSize(new Dimension(400, 400));
-        
         // Add window listener.
         this.addWindowListener
-        (
-            new WindowAdapter() {
-                public void windowClosing(WindowEvent e) {
-                    Test3DFrame.this.windowClosed();
-                }
-            }
-        );  
-        
+                (
+                        new WindowAdapter() {
+                            @Override
+                            public void windowClosing(WindowEvent e) {
+                                Test3DFrame.this.windowClosed();
+                            }
+                        }
+                );
         /**
          *
          */
-         
-        setBackground(Color.RED);
         
-       	
+        setBackground(Color.RED);       	
     }
     
     
@@ -85,6 +88,7 @@ public class Test3DFrame extends Frame {
     }
     
     
+    @Override
     public void paint(Graphics g) {
     	Graphics2D g2 = (Graphics2D)g;
     	
@@ -94,9 +98,6 @@ public class Test3DFrame extends Frame {
     	g2.drawLine(200,0,200,400);
     	g2.drawLine(0,200,400,200);
     	*/
-    	
-    	
-    	scale = 0.9;
     	
     	int camx = 0;
     	int camy = 0;
@@ -118,7 +119,7 @@ public class Test3DFrame extends Frame {
     	double xz = 0;
     	
     	   
-    	scale = scale / camz;   
+    	double _scale = SCALE / camz;   
     	    
      
     	Point points[] = new Point[8];   
@@ -132,11 +133,11 @@ public class Test3DFrame extends Frame {
     	 
     	 
     	g2.setPaint(Color.WHITE);    	
-    	for(int i = 0;i < 8;i++) {
+    	for(int k = 0;k < 8;k++) {
     		
-    		int xd = x[i] - pivx;
-    		int yd = y[i] - pivy;
-    		int zd = z[i] - pivz;
+    		int xd = x[k] - pivx;
+    		int yd = y[k] - pivy;
+    		int zd = z[k] - pivz;
     		
     		zx = (xd * Math.cos(Math.toRadians(anglez))) - (yd * Math.sin(Math.toRadians(anglez))) - xd;
     		zy = (xd * Math.sin(Math.toRadians(anglez))) + (yd * Math.cos(Math.toRadians(anglez))) - yd;
@@ -156,13 +157,13 @@ public class Test3DFrame extends Frame {
     		 *	3D calc
     		 **/
     		 
-    		double z1 = (z[i] + zrotoffset + camz);
-    		double x1 = (((x[i] + xrotoffset + camx) / z1) / scale) + movex;
-    		double y1 = (((y[i] + yrotoffset + camy) / z1) / scale) + movey;
+    		double z1 = (z[k] + zrotoffset + camz);
+    		double x1 = (((x[k] + xrotoffset + camx) / z1) / _scale) + movex;
+    		double y1 = (((y[k] + yrotoffset + camy) / z1) / _scale) + movey;
     		
-    		z1 = (z[i] + zrotoffset + camz);
+    		//z1 = (z[k] + zrotoffset + camz);
     		
-    		points[i] = new Point((int)x1+offset, (int)y1+offset);
+    		points[k] = new Point((int)x1+offset, (int)y1+offset);
     		
     		//g2.drawString(x[i] + ", " + y[i] + ", " + z[i] + "|", 100, (i*40)+100);
     		
@@ -197,7 +198,7 @@ public class Test3DFrame extends Frame {
    		
    		repaint();
    		try {
-   			Thread.sleep(speed);
+   			Thread.sleep(SPEED);
    		} catch(Exception e){
    			//
    		}
