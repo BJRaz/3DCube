@@ -2,7 +2,7 @@ package org.dyndns.tfud.TestApps;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.dyndns.tfud.Test3DFrame;
+import org.dyndns.tfud.Frame3D;
 
 /**
  * AWT Sample application
@@ -18,7 +18,7 @@ public class Test3D {
         {
             if(args.length < 3)
                 throw new Exception("no enough parameters");
-            Test3DFrame frame = new Test3DFrame(Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
+            Frame3D frame = new Frame3D(Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 
             // Show frame
             frame.setVisible(true);
