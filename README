@@ -1,0 +1,9 @@
+To run app:
+
+make run
+
+To clean up:
+
+make clean
+
+
