@@ -5,11 +5,11 @@
 
 all:	
 	-mkdir classes
-	javac src/Test3D.java src/Test3DFrame.java src/Point.java -d classes/
+	javac src/org/dyndns/tfud/TestApps/Test3D.java src/org/dyndns/tfud/Point.java src/org/dyndns/tfud/Frame3D.java -d classes/
 run:	all
-	java -cp classes/ Test3D 1 1 1
+	java -cp classes/ org.dyndns.tfud.TestApps.Test3D 1 1 1
 runold:
-	java -cp old_classes Test3D 1 1 1 
+	java -cp old_classes org.dyndns.tfud.TestApps.Test3D 1 1 1 
 clean:
-	rm -rf classes/*.class
+	rm -rf ./classes
 
