@@ -15,38 +15,40 @@ public class Frame3D extends Frame {
     private final int x[] = {i, i, i, i, -i, -i, -i, -i};
     private final int y[] = {i, i, -i, -i, i, i, -i, -i};
     private final int z[] = {-i, i, -i, i, -i, i, -i, i};
+
     
-    private double anglez, anglex, angley;
     private static final double SCALE = 1;
     private static final int SPEED = 131;
-
+    private final CubeModel model;
+    
     /**
      * The constructor.
      */
-    
     /**
      * The constructor.
+     *
      * @param anglex
      * @param angley
      * @param anglez
      */
     public Frame3D(double anglex, double angley, double anglez) {
-
+        model = new CubeModel();
+        
         init(anglez, anglex, angley);
 
     }
 
     /**
-     * 
+     *
      * @param anglez1
      * @param anglex1
      * @param angley1
-     * @throws HeadlessException 
+     * @throws HeadlessException
      */
     private void init(double anglez1, double anglex1, double angley1) throws HeadlessException {
-        this.anglez = anglez1;
-        this.anglex = anglex1;
-        this.angley = angley1;
+        model.anglez = anglez1;
+        model.anglex = anglex1;
+        model.angley = angley1;
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu();
         MenuItem menuFileExit = new MenuItem();
@@ -83,14 +85,10 @@ public class Frame3D extends Frame {
         System.exit(0);
     }
 
-    /**
-     * 
-     * @param g 
-     */
-    @Override
-    public void paint(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-
+    class CubeModel {
+        
+        public double anglez, anglex, angley;
+        
         int offset = 200;
 
         /*g2.setPaint(Color.GRAY);
@@ -115,57 +113,97 @@ public class Frame3D extends Frame {
         double yz = 0;
         double xy = 0;
         double xz = 0;
+        
+        Point points[];
+        
+        
+        public CubeModel() {
+            points = new Point[8];
+        }
 
-        double _scale = SCALE / camz;
+        public void setPivot(Pivot p) {
+            pivx = p.x;
+            pivy = p.y;
+            pivz = p.z;
+        }
+        
+        public Pivot getPivot() {
+            return new Pivot(pivx, pivy, pivz);
+        }
+        
+        public int getOffset() {
+            return offset;
+        }
+        
+        
+        
+        public Point[] calculate() {
+            double _scale = SCALE / camz;
 
-        Point points[] = new Point[8];
+            
 
-        /**
-         * DRAW PIVOT
-         */
-        g2.setPaint(Color.YELLOW);
-        g2.drawOval(pivx + offset, pivy + offset, 5, 5);
-        //g2.drawString("Pivot(" + (pivx) + "," + (pivy) + ")", pivx+offset, pivy+offset);
+            for (int k = 0; k < 8; k++) {
 
-        g2.setPaint(Color.WHITE);
-        for (int k = 0; k < 8; k++) {
+                int xd = x[k] - pivx;
+                int yd = y[k] - pivy;
+                int zd = z[k] - pivz;
 
-            int xd = x[k] - pivx;
-            int yd = y[k] - pivy;
-            int zd = z[k] - pivz;
+                zx = (xd * Math.cos(Math.toRadians(anglez))) - (yd * Math.sin(Math.toRadians(anglez))) - xd;
+                zy = (xd * Math.sin(Math.toRadians(anglez))) + (yd * Math.cos(Math.toRadians(anglez))) - yd;
 
-            zx = (xd * Math.cos(Math.toRadians(anglez))) - (yd * Math.sin(Math.toRadians(anglez))) - xd;
-            zy = (xd * Math.sin(Math.toRadians(anglez))) + (yd * Math.cos(Math.toRadians(anglez))) - yd;
+                yx = ((xd + zx) * Math.cos(Math.toRadians(angley))) - (zd * Math.sin(Math.toRadians(angley))) - (xd + zx);
+                yz = ((xd + zx) * Math.sin(Math.toRadians(angley))) + (zd * Math.cos(Math.toRadians(angley))) - zd;
 
-            yx = ((xd + zx) * Math.cos(Math.toRadians(angley))) - (zd * Math.sin(Math.toRadians(angley))) - (xd + zx);
-            yz = ((xd + zx) * Math.sin(Math.toRadians(angley))) + (zd * Math.cos(Math.toRadians(angley))) - zd;
+                xy = ((yd + zy) * Math.cos(Math.toRadians(anglex))) - ((zd + yz) * Math.sin(Math.toRadians(anglex))) - (yd + zy);
+                xz = ((yd + zy) * Math.sin(Math.toRadians(anglex))) + ((zd + yz) * Math.cos(Math.toRadians(anglex))) - (zd + yz);
 
-            xy = ((yd + zy) * Math.cos(Math.toRadians(anglex))) - ((zd + yz) * Math.sin(Math.toRadians(anglex))) - (yd + zy);
-            xz = ((yd + zy) * Math.sin(Math.toRadians(anglex))) + ((zd + yz) * Math.cos(Math.toRadians(anglex))) - (zd + yz);
+                double xrotoffset = yx + zx;
+                double yrotoffset = zy + xy;
+                double zrotoffset = xz + yz;
 
-            double xrotoffset = yx + zx;
-            double yrotoffset = zy + xy;
-            double zrotoffset = xz + yz;
+                /**
+                 * 3D calc
+                 *
+                 */
+                double z1 = (z[k] + zrotoffset + camz);
+                double x1 = (((x[k] + xrotoffset + camx) / z1) / _scale) + movex;
+                double y1 = (((y[k] + yrotoffset + camy) / z1) / _scale) + movey;
 
-            /**
-             * 3D calc
-    		 *
-             */
-            double z1 = (z[k] + zrotoffset + camz);
-            double x1 = (((x[k] + xrotoffset + camx) / z1) / _scale) + movex;
-            double y1 = (((y[k] + yrotoffset + camy) / z1) / _scale) + movey;
-
-            //z1 = (z[k] + zrotoffset + camz);
-            points[k] = new Point((int) x1 + offset, (int) y1 + offset);
-            /*
+                //z1 = (z[k] + zrotoffset + camz);
+                points[k] = new Point((int) x1 + offset, (int) y1 + offset);
+                /*
     		g2.drawString(x[i] + ", " + y[i] + ", " + z[i] + "|", 100, (i*40)+100);
     		
     		g2.drawString("HER: " + xrotoffset + " " + yrotoffset + " " + zrotoffset, 100, ((i*20)+100));
     		g2.drawOval((int)((x[i] + xrotoffset)/SCALE)+offset, (int)((y[i] + yrotoffset)/SCALE)+offset, 1, 1);
     		g2.drawOval((int)x1+offset, (int)y1+offset, 1, 1);
-             */
+                 */
+            }
+            return points;
         }
+    }
 
+    /**
+     *
+     * @param g
+     */
+    @Override
+    public void paint(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+
+        /**
+         * DRAW PIVOT
+         */
+        Pivot pv = model.getPivot();
+        g2.setPaint(Color.YELLOW);
+        g2.drawOval(pv.x + model.getOffset(), pv.y + model.getOffset(), 5, 5);
+        //g2.drawString("Pivot(" + (pivx) + "," + (pivy) + ")", pivx+offset, pivy+offset);
+
+        g2.setPaint(Color.WHITE);
+
+        Point[] points = model.calculate();
+        
+        
         /**
          * DRAW BOX
          */
@@ -185,7 +223,7 @@ public class Frame3D extends Frame {
     }
 
     /**
-     * 
+     *
      */
     public void render() {
 
@@ -193,7 +231,7 @@ public class Frame3D extends Frame {
     }
 
     /**
-     * 
+     *
      */
     private void DoWork() {
         repaint();
@@ -202,9 +240,9 @@ public class Frame3D extends Frame {
         } catch (Exception e) {
             //
         }
-        this.anglez += 6f;
-        this.anglex += 8f;
-        this.angley += 6f;
+        model.anglez += 6f;
+        model.anglex += 8f;
+        model.angley += 6f;
 
         DoWork();
     }
