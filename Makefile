@@ -5,7 +5,10 @@
 
 all:	
 	-mkdir classes
-	javac src/org/dyndns/tfud/TestApps/Test3D.java src/org/dyndns/tfud/Point.java src/org/dyndns/tfud/Frame3D.java -d classes/
+	javac src/org/dyndns/tfud/TestApps/Test3D.java \
+		src/org/dyndns/tfud/Point.java \
+		src/org/dyndns/tfud/Frame3D.java \
+		src/org/dyndns/tfud/Pivot.java -d classes/
 run:	all
 	java -cp classes/ org.dyndns.tfud.TestApps.Test3D 1 1 1
 runold:
